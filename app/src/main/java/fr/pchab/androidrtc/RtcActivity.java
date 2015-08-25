@@ -43,6 +43,7 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
     private WebRtcClient client;
     private String mSocketAddress;
     private String callerId;
+     private Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,6 +131,20 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
             }
         } else {
             call(callId);
+        }
+    }
+    
+      @Override
+    public void onInit(String platform) {
+        Log.i("AM","onInit: " + platform);
+        if (platform.equalsIgnoreCase("web")) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showLog("onInit: star for web");
+                    client.sendMessage(callerId, "init", null);// here is caller id will be web-caller id.. 
+                }
+            }, 1000 * 30);//Normally it take 1-5 secongs for all video share proecess, if call made between web to android then video stream at web side is not working properly, but call from android to web, stream is fine, just refreshing the ice candidate or reconnecting could give expected results
         }
     }
 
