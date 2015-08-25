@@ -38,6 +38,8 @@ class WebRtcClient {
     void onAddRemoteStream(MediaStream remoteStream, int endPoint);
 
     void onRemoveRemoteStream(MediaStream remoteStream, int endPoint);
+    
+    void onInit(String platform);
   }
 
   private interface Command{
@@ -121,6 +123,9 @@ class WebRtcClient {
           JSONObject payload = null;
           if(!type.equals("init")) {
             payload = data.getJSONObject("payload");
+          }
+          else{
+            mListener.onInit("");//Platform Web,Android,IOS for more generalize your logic
           }
           // if peer is unknown, try to add him
           if(!peers.containsKey(from)) {
